@@ -1,10 +1,16 @@
+import random
+
 class ScheduleIndividual:
     # constructor
-    def __init__(self, teams):
-        self.teams = teams 
-        self.schedule = self.generate_round_robin()
+    def __init__(self, teams, venues, timeslots, randomize=False):
+        self.teams = teams[:]
+        self.venues = venues[:]
+        self.timeslots = timeslots[:]
+        self.randomize = randomize
+        pair_rounds = self.generate_pair_rounds()
+        self.schedule = self.assign_slots(pair_rounds)
     
-    def generate_round_robin(self):
+    def generate_pair_rounds(self):
         teams = self.teams[:] # copy of team list to avoid modifying original list
         if len(teams) % 2 != 0: # handling odd number of teams
             teams.append("BYE")
@@ -25,10 +31,38 @@ class ScheduleIndividual:
         
         return rounds
     
-    # function for displaying the rounds
+    def assign_slots(self, pair_rounds):
+        rounds_with_slots = [] # list to store the schedule
+        combos = [(v,t) for v in self.venues for t in self.timeslots] # lis to store all possible (venues,timeslots) pairings
+
+        for round_pairs in pair_rounds:
+            if self.randomize: # shuffle if randomize = true
+                random.shuffle(combos)
+            if len(combos) < len(round_pairs): # handle not enough venues,timslots error
+                raise ValueError("Not enough (venue,timeslots) combinations to schedule this round. " f"matches: {len(round_pairs)}, slots: {len(combos)}")
+            round_matches = [] # list to store matches of every round
+            for pair, (venue,timeslot) in zip(round_pairs, combos):
+                # match dict
+                match = {
+                    "home": pair[0],
+                    "away": pair[1],
+                    "venue": venue,
+                    "timeslot": timeslot
+                }
+                round_matches.append(match) # add match to the round
+            rounds_with_slots.append(round_matches) # add round to the schedule
+        
+        return rounds_with_slots
+
+    
+    # function for displaying the schedule
     def display(self):
         for i, round_matches in enumerate(self.schedule, start=1):
-            print(f"Round {i}: {round_matches}")
+            print(f"Round {i}: ")
+            for m in round_matches:
+                print(f"{m['home']} vs {m['away']} @ {m['venue']} at {m['timeslot']}")
+                print()
+
     
 
 
