@@ -1,16 +1,21 @@
 #just for testing
 
 #import class
-from ga.individual import ScheduleIndividual
+from ga.population import Population
+from data.loadData import LoadData
 
-#test for even number of teams
-teams1 = ["A","B","C","D"]
-schedule1 = ScheduleIndividual(teams1)
-schedule1.display()
- 
-print("----------------------------------------------")
+# teams = ["A","B","C","D"]
+# venues = ["V1","V2","V3"]
+# timeslots = ["01-12-2025T12:00", "05-12-2025T12:00", "07-12-2025T12:00"]
 
-#test for odd number of teams
-teams2 = ["A","B","C","D","E"]
-schedule2 = ScheduleIndividual(teams2)
-schedule2.display()
+
+
+loadDataObj = LoadData()
+teams = loadDataObj.load_teams()
+venues = loadDataObj.load_venues()
+timeslots = loadDataObj.load_timeslots()
+
+
+populationObj = Population()
+populationList = populationObj.generate_population(teams, venues, timeslots, 6)
+populationObj.display_population(populationList)
