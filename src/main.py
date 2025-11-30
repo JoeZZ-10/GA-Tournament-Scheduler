@@ -15,10 +15,13 @@ loadDataObj = LoadData()
 teams = loadDataObj.load_teams()
 venues = loadDataObj.load_venues()
 timeslots = loadDataObj.load_timeslots()
+# print("Teams:", teams)
+# print("Venues:", venues)
+# print("TimeSlots:", timeslots)
 
 
 populationObj = Population()
-populationList = populationObj.generate_population(teams, venues, timeslots, 6)
+populationList = populationObj.generate_population(teams, venues, timeslots, 10)
 
 fitnessObj = Fitness()
 
