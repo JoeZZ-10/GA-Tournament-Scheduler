@@ -1,11 +1,18 @@
 import random
+import datetime
 
 class ScheduleIndividual:
     # constructor
-    def __init__(self, teams, venues, timeslots, randomize=False):
+    def __init__(self, teams, venues, timeslots, start_date, randomize=False):
         self.teams = teams[:]
         self.venues = venues[:]
         self.timeslots = timeslots[:]
+        if isinstance(start_date, str):
+            self.start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+        elif isinstance(start_date, datetime.date):
+            self.start_date = start_date
+        else:
+            raise TypeError("start_date must be a 'YYYY-MM-DD' string or a datetime.date object")
         self.randomize = randomize
         pair_rounds = self.generate_pair_rounds()
         self.schedule = self.assign_slots(pair_rounds)
@@ -34,20 +41,39 @@ class ScheduleIndividual:
     
     def assign_slots(self, pair_rounds):
         rounds_with_slots = [] # list to store the schedule
-        combos = [(v,t) for v in self.venues for t in self.timeslots] # lis to store all possible (venues,timeslots) pairings
 
-        for round_pairs in pair_rounds:
-            if self.randomize: # shuffle if randomize = true
-                random.shuffle(combos)
-            if len(combos) < len(round_pairs): # handle not enough venues,timslots error
-                raise ValueError("Not enough (venue,timeslots) combinations to schedule this round. " f"matches: {len(round_pairs)}, slots: {len(combos)}")
+        for round_index, matches in enumerate(pair_rounds):
+            week_start = self.start_date + datetime.timedelta(weeks=round_index)
+            
+            friday = week_start + datetime.timedelta(days=(4 - week_start.weekday()) % 7)
+            saturday = friday + datetime.timedelta(days=1)
+            sunday = friday + datetime.timedelta(days=2)
+            match_dates = [friday, saturday, sunday]
+
+            matches_copy = matches[:]
+            if self.randomize:
+                random.shuffle(match_dates)
+                random.shuffle(matches_copy)
+
+            if len(self.venues) < len(matches_copy):
+                raise ValueError(f"Not enough venues for round {round_index + 1} (matches: {len(matches_copy)}, venues: {len(self.venues)})")
+
+            round_venues = random.sample(self.venues, len(matches_copy))
+
+
             round_matches = [] # list to store matches of every round
-            for pair, (venue,timeslot) in zip(round_pairs, combos):
+            for i, (home, away) in enumerate(matches_copy):
+                date = match_dates[i % len(match_dates)]
+                venue = round_venues[i]
+                timeslot = random.choice(self.timeslots)
+
                 # match dict
                 match = {
-                    "home": pair[0],
-                    "away": pair[1],
+                    "round": round_index + 1,
+                    "home": home,
+                    "away": away,
                     "venue": venue,
+                    "date": date.strftime("%Y-%m-%d"),
                     "timeslot": timeslot
                 }
                 round_matches.append(match) # add match to the round
@@ -61,7 +87,7 @@ class ScheduleIndividual:
         for i, round_matches in enumerate(self.schedule, start=1):
             print(f"Round {i}: ")
             for m in round_matches:
-                print(f"{m['home']} vs {m['away']} @ {m['venue']} at {m['timeslot']}")
+                print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['date']} at {m['timeslot']}")
                 print()
 
     
