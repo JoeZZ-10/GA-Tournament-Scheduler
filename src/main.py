@@ -3,6 +3,7 @@
 #import class
 from ga.population import Population
 from data.loadData import LoadData
+from ga.Fitness import Fitness
 
 # teams = ["A","B","C","D"]
 # venues = ["V1","V2","V3"]
@@ -18,4 +19,11 @@ timeslots = loadDataObj.load_timeslots()
 
 populationObj = Population()
 populationList = populationObj.generate_population(teams, venues, timeslots, 6)
+
+fitnessObj = Fitness(populationList)
+fitnessObj.fitness()
+
 populationObj.display_population(populationList)
+
+for i,individual in enumerate(populationList,start=1):
+    print(f"Fitness Score of Sch[{i}]:", individual.fitness_score)
