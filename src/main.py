@@ -20,10 +20,10 @@ timeslots = loadDataObj.load_timeslots()
 populationObj = Population()
 populationList = populationObj.generate_population(teams, venues, timeslots, 6)
 
-fitnessObj = Fitness(populationList)
-fitnessObj.fitness()
+fitnessObj = Fitness()
 
-populationObj.display_population(populationList)
+# populationObj.display_population(populationList)
 
 for i,individual in enumerate(populationList,start=1):
+    fitnessObj.fitness(individual)
     print(f"Fitness Score of Sch[{i}]:", individual.fitness_score)
