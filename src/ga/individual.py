@@ -55,8 +55,8 @@ class ScheduleIndividual:
                 random.shuffle(match_dates)
                 random.shuffle(matches_copy)
 
-            if len(self.venues) < len(matches_copy):
-                raise ValueError(f"Not enough venues for round {round_index + 1} (matches: {len(matches_copy)}, venues: {len(self.venues)})")
+            # if len(self.venues) < len(matches_copy):
+            #     raise ValueError(f"Not enough venues for round {round_index + 1} (matches: {len(matches_copy)}, venues: {len(self.venues)})")
 
             round_venues = random.sample(self.venues, len(matches_copy))
 
@@ -65,7 +65,14 @@ class ScheduleIndividual:
             for i, (home, away) in enumerate(matches_copy):
                 date = match_dates[i % len(match_dates)]
                 venue = round_venues[i]
-                timeslot = random.choice(self.timeslots)
+                # timeslot = random.choice(self.timeslots)
+                if random.random() < 0.8:
+                    # اختر slot عشوائي غلط شوية
+                    timeslot = random.choice(self.timeslots)
+                else:
+                    # تسبب في تضارب بسيط متعمد (venues أو times)
+                    timeslot = self.timeslots[0]  
+
 
                 # match dict
                 match = {
