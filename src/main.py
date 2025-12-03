@@ -4,6 +4,7 @@
 from ga.population import Population
 from data.loadData import LoadData
 from ga.Fitness import Fitness
+from ga.Selection import Selection
 
 # teams = ["A","B","C","D"]
 # venues = ["V1","V2","V3"]
@@ -23,6 +24,7 @@ timeslots = loadDataObj.load_timeslots()
 populationObj = Population()
 populationList = populationObj.generate_population(teams, venues, timeslots, 10)
 
+
 fitnessObj = Fitness()
 
 # populationObj.display_population(populationList)
@@ -30,3 +32,9 @@ fitnessObj = Fitness()
 for i,individual in enumerate(populationList,start=1):
     fitnessObj.fitness(individual)
     print(f"Fitness Score of Sch[{i}]:", individual.fitness_score)
+
+selectionObj = Selection()
+selectedIndividuals = selectionObj.select_population(populationList, selection_size=5)
+print("\nSelected Individuals after Tournament Selection:")
+for i,individual in enumerate(selectedIndividuals,start=1):
+    print(f"Selected Sch[{i}] Fitness Score:", individual.fitness_score)
