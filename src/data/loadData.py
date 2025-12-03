@@ -2,9 +2,9 @@ import pandas as pd
 
 class LoadData:
     def __init__(self):
-        self.Teams = "E:\\Projects\\GA-Tournament-Scheduler\\src\\data\\Teams.csv"
-        self.Venues = "E:\\Projects\\GA-Tournament-Scheduler\\src\\data\\Venues.csv"
-        self.TimeSlots = "E:\\Projects\\GA-Tournament-Scheduler\\src\\data\\TimeSlots.csv"
+        self.Teams = "src/data/Teams.csv"
+        self.Venues = "src/data/Venues.csv"
+        self.TimeSlots = "src/data/TimeSlots.csv"
     
     def load_teams(self):
         dataset = pd.read_csv(self.Teams)
