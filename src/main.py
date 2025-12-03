@@ -5,6 +5,7 @@ from ga.population import Population
 from data.loadData import LoadData
 from ga.Fitness import Fitness
 from ga.Selection import Selection
+from ga.crossover import Crossover
 
 # teams = ["A","B","C","D"]
 # venues = ["V1","V2","V3"]
@@ -38,3 +39,14 @@ selectedIndividuals = selectionObj.select_population(populationList, selection_s
 print("\nSelected Individuals after Tournament Selection:")
 for i,individual in enumerate(selectedIndividuals,start=1):
     print(f"Selected Sch[{i}] Fitness Score:", individual.fitness_score)
+
+CrossoverObj = Crossover()
+parent1 = selectedIndividuals[0]
+parent2 = selectedIndividuals[1]
+print("\nPerforming Single Point Crossover between two selected individuals:")
+child1, child2 = CrossoverObj.single_point_crossover(parent1, parent2)
+fitnessObj.fitness(child1)
+fitnessObj.fitness(child2)
+print("Child 1 Fitness Score after evaluation:", child1.fitness_score)
+print("Child 2 Fitness Score after evaluation:", child2.fitness_score)
+
