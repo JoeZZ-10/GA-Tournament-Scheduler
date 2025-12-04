@@ -25,7 +25,6 @@ generationNum = 0
 retainPercentage = 0.2
 randomPercentage = 0.05
 fittestSolution = None
-newGeneration = []
 
 # Generate the population and calculate the fitness for every individual
 populationList = populationObj.generate_population(teams, venues, timeslots, populationSize)
@@ -39,6 +38,7 @@ while generationNum != 20:
     sortedPopulation = sorted(selectedIndividuals,key=lambda ind: ind.fitness_score,reverse=True)
 
     # keeps a percentage of the top individuals in the new generation
+    newGeneration = []
     retainedIndividuals = int(len(populationList) * retainPercentage)
     newGeneration = sortedPopulation [:retainedIndividuals]
 
@@ -69,6 +69,8 @@ while generationNum != 20:
     # calculate fitness for new generation
     for individual in newGeneration:
         fitnessObj.fitness(individual)
+
+    populationList = newGeneration
 
     generationNum += 1
 
