@@ -60,7 +60,7 @@ while generationNum != 20:
             child1,child2 = CrossoverObj.two_point_crossover(parent1,parent2)
             newGeneration.append(child1)
 
-            if len(newGeneration) < 10:
+            if len(newGeneration) < populationSize:
                 newGeneration.append(child2)
 
     # Mutate some individuals
