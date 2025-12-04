@@ -25,13 +25,13 @@ generationNum = 0
 retainPercentage = 0.2
 randomPercentage = 0.05
 fittestSolution = None
+
+# Generate the population and calculate the fitness for every individual
 populationList = populationObj.generate_population(teams, venues, timeslots, populationSize)
+for individual in populationList:
+    fitnessObj.fitness(individual)
 
 while generationNum != 20:
-
-    # Calculate the fitness for every individual in the population
-    for individual in populationList:
-        fitnessObj.fitness(individual)
 
     # Selection on the whole population
     selectedIndividuals = selectionObj.select_population(populationList, selection_size=5)
