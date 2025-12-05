@@ -35,7 +35,7 @@ for i,individual in enumerate(populationList,start=1):
     print(f"Fitness Score of Sch[{i}]:", individual.fitness_score)
 
 selectionObj = Selection()
-selectedIndividuals = selectionObj.select_population(populationList, selection_size=5)
+selectedIndividuals = selectionObj.select_population(populationList, selection_size=10)
 print("\nSelected Individuals after Tournament Selection:")
 for i,individual in enumerate(selectedIndividuals,start=1):
     print(f"Selected Sch[{i}] Fitness Score:", individual.fitness_score)
