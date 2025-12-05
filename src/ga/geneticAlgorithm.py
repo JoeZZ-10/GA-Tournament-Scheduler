@@ -10,13 +10,13 @@ import random
 
 class GeneticAlgorithm:
 
-    def runAlgorithm (teams, venues, timeslots):
+    def runAlgorithm (self,teams, venues, timeslots):
         populationObj = Population()
         selectionObj = Selection()
         fitnessObj = Fitness()
         CrossoverObj = Crossover()
-        mutationObj = Mutation()
-        populationSize = 10
+        mutationObj = Mutation(teams, venues, timeslots)
+        populationSize = 30
         generationNum = 0
         maximumGenerations = 20
         retainPercentage = 0.2
@@ -31,7 +31,7 @@ class GeneticAlgorithm:
         while generationNum != maximumGenerations:
 
             # Selection on the whole population
-            selectedIndividuals = selectionObj.select_population(populationList, selection_size=5)
+            selectedIndividuals = selectionObj.select_population(populationList, populationSize)
             sortedPopulation = sorted(selectedIndividuals,key=lambda ind: ind.fitness_score,reverse=True)
 
             # keeps a percentage of the top individuals in the new generation
@@ -72,7 +72,7 @@ class GeneticAlgorithm:
             generationNum += 1
 
             # keeps track of the best solution across all generations
-            fittestSolution = terminationConditions.checkForSolution(newGeneration)
+            fittestSolution = terminationConditions.checkForSolution(terminationConditions,newGeneration)
             if fittestSolution.fitness_score == 10000:
                 break
         

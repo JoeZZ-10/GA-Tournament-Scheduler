@@ -4,10 +4,10 @@ import pandas as pd
 
 class Mutation:
 
-    def __init__(self, venues_path="src/data/Venues.csv", timeslots_path="src/data/TimeSlots.csv", teams_path="src/data/Teams.csv"):
-        self.venues = pd.read_csv(venues_path)["Venue"].tolist()
-        self.timeslots = pd.read_csv(timeslots_path)["Date"].tolist()
-        self.teams = pd.read_csv(teams_path)["Team"].tolist()
+    def __init__(self, teams=None, venues=None, timeslots=None):
+        self.teams = teams if teams is not None else []
+        self.venues = venues if venues is not None else []
+        self.timeslots = timeslots if timeslots is not None else []
 
     def mutate(self, individual, mutation_rate=0.01):
         new_individual = copy.deepcopy(individual)

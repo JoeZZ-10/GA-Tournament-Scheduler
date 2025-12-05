@@ -94,8 +94,8 @@ class ScheduleIndividual:
         for i, round_matches in enumerate(self.schedule, start=1):
             print(f"Round {i}: ")
             for m in round_matches:
-                print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['date']} at {m['timeslot']}")
-                print()
+                print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['timeslot']}")
+            print()
 
     
 
