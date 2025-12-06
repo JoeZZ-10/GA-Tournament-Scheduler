@@ -1,7 +1,7 @@
 import random
 import datetime
 
-from schdualeAndPlots import create_round_image, merge_images_grid
+#from schdualeAndPlots import create_round_image, merge_images_grid
 
 class ScheduleIndividual:
     # constructor
@@ -45,36 +45,25 @@ class ScheduleIndividual:
         rounds_with_slots = [] # list to store the schedule
 
         for round_index, matches in enumerate(pair_rounds):
-            week_start = self.start_date + datetime.timedelta(weeks=round_index)
-            
-            friday = week_start + datetime.timedelta(days=(4 - week_start.weekday()) % 7)
-            saturday = friday + datetime.timedelta(days=1)
-            sunday = friday + datetime.timedelta(days=2)
-            match_dates = [friday, saturday, sunday]
+            base_week = self.start_date + datetime.timedelta(weeks=round_index) # base date for the current round
 
-            matches_copy = matches[:]
+            matches_copy = matches[:] # copy matches to avoid modifying original list
+
             if self.randomize:
-                random.shuffle(match_dates)
-                random.shuffle(matches_copy)
+                random.shuffle(matches_copy) # randomly shuffle match order
 
-            # if len(self.venues) < len(matches_copy):
-            #     raise ValueError(f"Not enough venues for round {round_index + 1} (matches: {len(matches_copy)}, venues: {len(self.venues)})")
+            round_venues = [
+                random.choice(self.venues) # randomly assign a venue
+                for _ in range(len(matches_copy))
+            ]
 
-            round_venues = random.sample(self.venues, len(matches_copy))
+            round_matches = [] # list to store matches of current round
 
-
-            round_matches = [] # list to store matches of every round
             for i, (home, away) in enumerate(matches_copy):
-                date = match_dates[i % len(match_dates)]
-                venue = round_venues[i]
-                # timeslot = random.choice(self.timeslots)
-                if random.random() < 0.8:
-                    # اختر slot عشوائي غلط شوية
-                    timeslot = random.choice(self.timeslots)
-                else:
-                    # تسبب في تضارب بسيط متعمد (venues أو times)
-                    timeslot = self.timeslots[0]  
-
+                random_day_offset = random.randint(0,6) # pick random day within the week
+                date = base_week + datetime.timedelta(days=random_day_offset) # compute match date
+                venue = round_venues[i] # assign venue for the match
+                timeslot = random.choice(self.timeslots) # randomly assign timeslot
 
                 # match dict
                 match = {
@@ -96,5 +85,5 @@ class ScheduleIndividual:
         for i, round_matches in enumerate(self.schedule, start=1):
             print(f"Round {i}: ")
             for m in round_matches:
-                print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['timeslot']}")
+                print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['date']} {m['timeslot']}")
             print()
