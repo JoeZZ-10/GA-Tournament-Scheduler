@@ -1,6 +1,8 @@
 import random
 import datetime
 
+from schdualeAndPlots import create_round_image, merge_images_grid
+
 class ScheduleIndividual:
     # constructor
     def __init__(self, teams, venues, timeslots, start_date, randomize=False):
@@ -96,10 +98,3 @@ class ScheduleIndividual:
             for m in round_matches:
                 print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['timeslot']}")
             print()
-
-    
-
-
-    
-
-
