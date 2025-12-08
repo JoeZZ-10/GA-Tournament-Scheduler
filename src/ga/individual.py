@@ -5,10 +5,11 @@ import datetime
 
 class ScheduleIndividual:
     # constructor
-    def __init__(self, teams, venues, timeslots, start_date, randomize=False):
+    def __init__(self, teams, venues, timeslots,times, start_date, randomize=False):
         self.teams = teams[:]
         self.venues = venues[:]
         self.timeslots = timeslots[:]
+        self.times = times[:]
         if isinstance(start_date, str):
             self.start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
         elif isinstance(start_date, datetime.date):
@@ -64,6 +65,7 @@ class ScheduleIndividual:
                 date = base_week + datetime.timedelta(days=random_day_offset) # compute match date
                 venue = round_venues[i] # assign venue for the match
                 timeslot = random.choice(self.timeslots) # randomly assign timeslot
+                time = random.choice(self.times)  # randomly assign time
 
                 # match dict
                 match = {
@@ -72,7 +74,8 @@ class ScheduleIndividual:
                     "away": away,
                     "venue": venue,
                     "date": date.strftime("%Y-%m-%d"),
-                    "timeslot": timeslot
+                    "timeslot": timeslot,
+                    "time": time.strftime("%H:%M"), # format time as HH:MM 
                 }
                 round_matches.append(match) # add match to the round
             rounds_with_slots.append(round_matches) # add round to the schedule

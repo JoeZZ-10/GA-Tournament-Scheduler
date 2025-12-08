@@ -10,7 +10,7 @@ import random
 
 class GeneticAlgorithm:
 
-    def runAlgorithm (self,teams, venues, timeslots):
+    def runAlgorithm (self,teams, venues, timeslots,times):
         populationObj = Population()
         selectionObj = Selection()
         fitnessObj = Fitness()
@@ -24,7 +24,7 @@ class GeneticAlgorithm:
         fittestSolution = None
 
         # Generate population and calculate fitness
-        populationList = populationObj.generate_population(teams, venues, timeslots, populationSize)
+        populationList = populationObj.generate_population(teams, venues, timeslots,times, populationSize)
         for individual in populationList:
             fitnessObj.fitness(individual)
 

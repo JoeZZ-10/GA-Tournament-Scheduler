@@ -1,10 +1,11 @@
 import pandas as pd
-
+import datetime
 class LoadData:
     def __init__(self):
         self.Teams = "src/data/Teams.csv"
         self.Venues = "src/data/Venues.csv"
         self.TimeSlots = "src/data/TimeSlots.csv"
+        self.Times = "src/data/Times.csv"
     
     def load_teams(self):
         dataset = pd.read_csv(self.Teams)
@@ -22,3 +23,16 @@ class LoadData:
         dataset = pd.read_csv(self.TimeSlots)
         df = pd.DataFrame(dataset)
         return df.iloc[:, -1].astype(str).tolist()
+
+    def load_times_from_csv(self):
+        times = []
+        dataset = pd.read_csv(self.Times)
+        df = pd.DataFrame(dataset)
+        reader = df.values.tolist()
+        for row in reader:
+            if not row: 
+                continue
+            time_str = row[0].strip()
+            hour, minute = map(int, time_str.split(":"))
+            times.append(datetime.time(hour, minute))
+        return times

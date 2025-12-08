@@ -9,9 +9,10 @@ def run_prediction():
     teams = loadDataObj.load_teams()
     venues = loadDataObj.load_venues()
     timeslots = loadDataObj.load_timeslots()
+    times = loadDataObj.load_times_from_csv()
 
     gaObj = GeneticAlgorithm()
-    best_schedule = gaObj.runAlgorithm(teams, venues, timeslots)
+    best_schedule = gaObj.runAlgorithm(teams, venues, timeslots,times)
 
     # Final Schedule 
     round_images = generate_all_round_images(best_schedule)

@@ -2,9 +2,9 @@ from datetime import datetime
 
 class Constraints:
 
-    # Constraint: No team should have more than one match at the same time slot
+    # Constraint 1: No team should have more than one match at the same time slot
 
-    def TwoMatchesPerTeamatSameTime(self,individual):
+    def TwoMatchesPerTeamatSameDay(self,individual):
         Team_Played = {} # Dictionary to track team and their timeslots
         penalty = 0
         conflict_found = 0
@@ -12,7 +12,7 @@ class Constraints:
             for m in round_matches:
                 conflict_found = self.count_team_conflicts(Team_Played, m) # Check for conflicts
         if conflict_found > 0:
-                    penalty += conflict_found * 200 # High penalty for this constraint
+                    penalty += conflict_found * 500 # High penalty for this constraint
         return penalty
 
     def count_team_conflicts(self, Team_Played, m):
@@ -31,7 +31,7 @@ class Constraints:
     
 # -----------------------------------------------------------------------------------------
     
-    # Constraint: No venue should host more than one match at the same time slot
+    # Constraint 2: No venue should host more than one match at the same time slot
 
     def VenueConfliictConstraint(self,individual):
         venue_usage = {} # Dictionary to track venue and their timeslots
@@ -44,12 +44,12 @@ class Constraints:
                     conflict_found += 1
                 venue_usage[venue_timeslot] = 1 # Mark venue as used at this timeslot
         if conflict_found > 0:
-            penalty += conflict_found * 100
+            penalty += conflict_found * 200
         return penalty
     
 # -----------------------------------------------------------------------------------------
 
-    # Constraint: Each team should have at least 2 rest days between matches
+    # Constraint 3: Each team should have at least 2 rest days between matches
 
     def RestDayConstraint(self,individual): 
         penalty = 0
@@ -59,7 +59,7 @@ class Constraints:
              for m in round_matches:
                   rest_violations = self.calculate_rest_violations(team_last_match_day, m) # Calculate rest day violations
         if rest_violations > 0:
-            penalty += rest_violations * 50 # Penalty for rest day violations
+            penalty += rest_violations * 100 # Penalty for rest day violations
         return penalty
 
     def calculate_rest_violations(self, team_last_match_day, m):
@@ -78,5 +78,36 @@ class Constraints:
               rest_violations += 1
         team_last_match_day[m['away']] = m['timeslot'] # Update last match day for away team
         return rest_violations
+    
+# -----------------------------------------------------------------------------------------
+    
+    # Constraint 4: fair time distribution of matches for each team
+
+    def FairTimeDistributionConstraint(self,individual):
+        penalty = 0
+        time_distribution_violations = 0
+        team_times = {} # Dictionary to track time slots for each team
+        for round_matches in individual.schedule:
+                for m in round_matches:
+                    time_distribution_violations = self.calculate_time_distribution_violations(team_times, m) # Calculate time distribution violations
+        if time_distribution_violations > 0:
+            penalty += time_distribution_violations * 50 # Penalty for time distribution violations
+        return penalty
+    
+    def calculate_time_distribution_violations(self, team_times, m):
+        time_distribution_violations = 0
+        if m['home'] in team_times: # Check if home team has played before
+            if team_times[m['home']] == m['time']: # Check if home team has played at this time
+                time_distribution_violations += 1
+        else:
+            team_times[m['home']] = m['timeslot'] # Mark home team as played at this time
+        if m['away'] in team_times: # Check if home team has played before
+            if team_times[m['away']] == m['time']: # Check if away team has played at this time
+                time_distribution_violations += 1 
+        else:
+            team_times[m['away']] = m['timeslot'] # Mark away team as played at this time
+        return time_distribution_violations
+
+
 
 
