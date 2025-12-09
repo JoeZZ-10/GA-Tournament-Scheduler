@@ -20,6 +20,8 @@ class ScheduleIndividual:
         pair_rounds = self.generate_pair_rounds()
         self.schedule = self.assign_slots(pair_rounds)
         self.fitness_score = 10000 # default high fitness score
+        self.penalties = {} # dictionary to store penalties for each constraint 
+        self.Nosolution = False # flag to indicate if no valid solution
     
     def generate_pair_rounds(self):
         teams = self.teams[:] # copy of team list to avoid modifying original list

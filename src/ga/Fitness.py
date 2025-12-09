@@ -14,3 +14,11 @@ class Fitness:
         total_penalty = penalty1 + penalty2 + penalty3 + penalty4  # Sum of all penalties
 
         individual.fitness_score -= total_penalty # Subtract penalties from fitness score
+
+        if individual.fitness_score < 0:
+            individual.penalties = {
+                'TwoMatchesPerTeamatSameDay': penalty1,
+                'VenueConfliictConstraint': penalty2,
+                'RestDayConstraint': penalty3,
+                'FairTimeDistributionConstraint': penalty4
+            }

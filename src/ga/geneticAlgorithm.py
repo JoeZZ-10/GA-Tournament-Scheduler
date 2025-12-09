@@ -75,5 +75,8 @@ class GeneticAlgorithm:
             fittestSolution = terminationConditions.checkForSolution(terminationConditions,newGeneration)
             if fittestSolution.fitness_score == 10000:
                 break
-        
+            
+        if fittestSolution.fitness_score < 0:
+            individual.Nosolution = True
+
         return fittestSolution
