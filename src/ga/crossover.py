@@ -3,6 +3,19 @@ import copy
 from ga.individual import ScheduleIndividual
 class Crossover:
 
+    def crossover(self, CrossOverType , parent1 , parent2):
+        match CrossOverType:
+            case "uniform":
+                return self.uniform_crossover(parent1, parent2)
+
+            case "one_point":
+                return self.single_point_crossover(parent1, parent2)
+
+            case "two_point":
+                return self.two_point_crossover(parent1, parent2)
+            case _:
+                pass
+    
     def uniform_crossover(self,parent1, parent2):
         rounds = len(parent1.schedule)
 

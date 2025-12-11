@@ -10,18 +10,21 @@ import random
 
 class GeneticAlgorithm:
 
-    def runAlgorithm (self,teams, venues, timeslots,times):
+    def runAlgorithm (self,teams, venues, timeslots,times, CrossOverType, SlectionType, MutationType):
         populationObj = Population()
         selectionObj = Selection()
         fitnessObj = Fitness()
         CrossoverObj = Crossover()
-        mutationObj = Mutation(teams, venues, timeslots)
+        mutationObj = Mutation(teams, venues, timeslots, times)
         populationSize = 30
         generationNum = 0
-        maximumGenerations = 20
+        maximumGenerations = 150
         retainPercentage = 0.2
         randomPercentage = 0.05
         fittestSolution = None
+        best_fitness_per_gen = []
+        avg_fitness_per_gen = []
+
 
         # Generate population and calculate fitness
         populationList = populationObj.generate_population(teams, venues, timeslots,times, populationSize)
@@ -31,7 +34,7 @@ class GeneticAlgorithm:
         while generationNum != maximumGenerations:
 
             # Selection on the whole population
-            selectedIndividuals = selectionObj.select_population(populationList, populationSize)
+            selectedIndividuals = selectionObj.select_population(populationList, populationSize, SlectionType)
             sortedPopulation = sorted(selectedIndividuals,key=lambda ind: ind.fitness_score,reverse=True)
 
             # keeps a percentage of the top individuals in the new generation
@@ -53,7 +56,7 @@ class GeneticAlgorithm:
                 else:
                     parent1 = newGeneration[index1]
                     parent2 = newGeneration[index2]
-                    child1,child2 = CrossoverObj.two_point_crossover(parent1,parent2)
+                    child1,child2 = CrossoverObj.crossover(CrossOverType,parent1,parent2)
                     newGeneration.append(child1)
 
                     if len(newGeneration) < populationSize:
@@ -61,7 +64,7 @@ class GeneticAlgorithm:
 
             # Mutate some individuals
             for individual in newGeneration:
-                mutationObj.mutate(individual)
+                mutationObj.mutate(individual, MutationType)
 
             # calculate fitness for new generation
             for individual in newGeneration:
@@ -77,6 +80,12 @@ class GeneticAlgorithm:
                 break
             
         if fittestSolution.fitness_score < 0:
-            individual.Nosolution = True
+            individual.Nosolution = True # to handle the no solutins in the GUI, for mohamed
+            
+        # bes and avrage fitness for the plots 
+        fitness_values = [ind.fitness_score for ind in populationList]
+
+        best_fitness_per_gen.append(max(fitness_values))
+        avg_fitness_per_gen.append(sum(fitness_values) / len(fitness_values))
 
         return fittestSolution

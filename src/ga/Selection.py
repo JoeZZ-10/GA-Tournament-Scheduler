@@ -1,23 +1,37 @@
 import random
 import copy
 from ga.individual import ScheduleIndividual
-class Selection:
-    def tournament_selection(self,population, k=3):
-        # Randomly choose k individuals from the population
-        tournament = random.sample(population,2)
-        # Higher fitness_score is better (10000 - penalties)
-        winner = max(tournament, key=lambda ind: ind.fitness_score)
-        return winner
-    
-    def select_population(self, population, selection_size):
+
+class Selection:     
+
+    def tournament_selection(self, population):
+        tournament = random.sample(population, 2)
+        return max(tournament, key=lambda ind: ind.fitness_score)
+
+    def rank_selection(self, population):
+        sorted_pop = sorted(population, key=lambda ind: ind.fitness_score)
+        ranks = list(range(1, len(sorted_pop) + 1))
+        total = sum(ranks)
+        pick = random.uniform(0, total)
+        current = 0
+        for ind, r in zip(sorted_pop, ranks):
+            current += r
+            if current >= pick:
+                return ind
+
+    def select_population(self, population, selection_size, method):
         selected = []
         for _ in range(selection_size):
-            winner = self.tournament_selection(population)
-            # Create a new individual with same data
+            if method == "rank":
+                winner = self.rank_selection(population)
+            else:
+                winner = self.tournament_selection(population)
+            
             new_individual = ScheduleIndividual(
                 winner.teams,
                 winner.venues,
                 winner.timeslots,
+                winner.times,
                 winner.start_date,
                 randomize=False
             )

@@ -1,32 +1,21 @@
-def run_prediction():
-    from tkinter import Toplevel
-    from tkinter import Label
+def run_prediction(mutatetype, slctype, crovertype):
+    from ga.population import Population 
     from data.loadData import LoadData
     from ga.geneticAlgorithm import GeneticAlgorithm
-    from schdualeAndPlots import generate_all_round_images, merge_images_grid
     from PIL import ImageTk, Image
     loadDataObj = LoadData()
     teams = loadDataObj.load_teams()
     venues = loadDataObj.load_venues()
     timeslots = loadDataObj.load_timeslots()
     times = loadDataObj.load_times_from_csv()
-
+    populationObj = Population()
     gaObj = GeneticAlgorithm()
-    best_schedule = gaObj.runAlgorithm(teams, venues, timeslots,times)
-
-    # Final Schedule 
-    round_images = generate_all_round_images(best_schedule)
-    merge_images_grid(round_images, columns=4, max_width=1200, max_height=1000, output_file="Final_Schedule.png")
-
-    # Create new window
-    img_window = Toplevel()
-    img_window.title("Final Schedule")
+    best_schedule = gaObj.runAlgorithm(teams, venues, timeslots,times, crovertype, slctype, mutatetype)
+    best_schedule.display()
     
-    # Load the saved image
-    img = Image.open("Final_Schedule.png")
-    img_tk = ImageTk.PhotoImage(img)
     
-    # Display in label
-    label_img = Label(img_window, image=img_tk)
-    label_img.image = img_tk  # Keep reference
-    label_img.pack()
+    populationList = populationObj.generate_population(teams,venues,timeslots,times, 30)
+    populationObj.display_population(populationList)
+
+    for i,individual in enumerate(populationList,start=1):
+        print(f"Fitness Score of Sch[{i}]:", individual.fitness_score)
