@@ -81,8 +81,7 @@ class GeneticAlgorithm:
             
         if fittestSolution.fitness_score < 0:
             individual.Nosolution = True # to handle the no solutins in the GUI, for mohamed
-            
-        # bes and avrage fitness for the plots 
+        # bes and avrage fitness for the plots
         fitness_values = [ind.fitness_score for ind in populationList]
 
         best_fitness_per_gen.append(max(fitness_values))
