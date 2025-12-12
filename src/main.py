@@ -8,15 +8,10 @@ def run_prediction(mutatetype, slctype, crovertype):
     venues = loadDataObj.load_venues()
     timeslots = loadDataObj.load_timeslots()
     times = loadDataObj.load_times_from_csv()
-    populationObj = Population()
     gaObj = GeneticAlgorithm()
     best_schedule = gaObj.runAlgorithm(teams, venues, timeslots,times, crovertype, slctype, mutatetype)
-    best_schedule.display()
-    print(best_schedule.fitness_score)
-    
-    
-    # populationList = populationObj.generate_population(teams,venues,timeslots,times, 30)
-    # populationObj.display_population(populationList)
-
-    # for i,individual in enumerate(populationList,start=1):
-    #     print(f"Fitness Score of Sch[{i}]:", individual.fitness_score)
+    if best_schedule.NoSolution:
+        print("No feasible solution found.")
+    else:
+        best_schedule.display()
+        print(best_schedule.fitness_score)
