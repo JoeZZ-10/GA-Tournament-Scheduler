@@ -23,7 +23,7 @@ class Constraints:
 
     def count_team_conflicts(self, m):
         conflict_found = 0
-        time_slot = m['timeslot']
+        time_slot = m['date']
         # Initialize set for this timeslot if not exist
         if time_slot not in self.Team_Played:
             self.Team_Played[time_slot] = set()
@@ -53,7 +53,7 @@ class Constraints:
         conflict_found = 0
         for round_matches in individual.schedule:
             for m in round_matches:
-                timeandtime_slot_usage = (m['time'],m['timeslot'])
+                timeandtime_slot_usage = (m['timeslot'],m['date'])
                 venue = m['venue']
                 if venue in self.venue_usage: # Check if venue is already used at this timeslot
                     if  timeandtime_slot_usage in self.venue_usage[venue]:
@@ -83,19 +83,19 @@ class Constraints:
 
     def calculate_rest_violations(self,m):
         rest_violations = 0
-        date1 = datetime.strptime(m['timeslot'], "%Y-%m-%d") 
+        date1 = datetime.strptime(m['date'], "%Y-%m-%d") 
         if m['home'] in self.team_last_match_day:
               date2 = datetime.strptime(self.team_last_match_day[m['home']], "%Y-%m-%d") 
               diff = (date1 - date2).days # Calculate difference in days
               if diff < 2: # If less than 2 days, it's a violation
                   rest_violations += 1
-        self.team_last_match_day[m['home']] = m['timeslot'] # Update last match day for home team
+        self.team_last_match_day[m['home']] = m['date'] # Update last match day for home team
         if m['away'] in self.team_last_match_day:
           date2 = datetime.strptime(self.team_last_match_day[m['away']], "%Y-%m-%d")
           diff = (date1 - date2).days # Calculate difference in days
           if diff < 2: # Violation for away team
               rest_violations += 1
-        self.team_last_match_day[m['away']] = m['timeslot'] # Update last match day for away team
+        self.team_last_match_day[m['away']] = m['date'] # Update last match day for away team
         return rest_violations
     
 # -----------------------------------------------------------------------------------------
@@ -115,15 +115,15 @@ class Constraints:
     def calculate_time_distribution_violations(self, m):
         time_distribution_violations = 0
         if m['home'] in self.team_times: # Check if home team has played before
-            if self.team_times[m['home']] == m['time']: # Check if home team has played at this time
+            if self.team_times[m['home']] == m['timeslot']: # Check if home team has played at this time
                 time_distribution_violations += 1
         else:
-            self.team_times[m['home']] = m['time'] # Mark home team as played at this time
+            self.team_times[m['home']] = m['timeslot'] # Mark home team as played at this time
         if m['away'] in self.team_times: # Check if home team has played before
-            if self.team_times[m['away']] == m['time']: # Check if away team has played at this time
+            if self.team_times[m['away']] == m['timeslot']: # Check if away team has played at this time
                 time_distribution_violations += 1 
         else:
-            self.team_times[m['away']] = m['time'] # Mark away team as played at this time
+            self.team_times[m['away']] = m['timeslot'] # Mark away team as played at this time
         return time_distribution_violations
 
 

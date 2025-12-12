@@ -10,15 +10,15 @@ import random
 
 class GeneticAlgorithm:
 
-    def runAlgorithm (self,teams, venues, timeslots,times, CrossOverType, SlectionType, MutationType):
+    def runAlgorithm (self,teams, venues, date,timeslots, CrossOverType, SlectionType, MutationType):
         populationObj = Population()
         selectionObj = Selection()
         fitnessObj = Fitness()
         CrossoverObj = Crossover()
-        mutationObj = Mutation(teams, venues, timeslots, times)
+        mutationObj = Mutation(teams, venues,date, timeslots)
         populationSize = 30
         generationNum = 0
-        maximumGenerations = 500
+        maximumGenerations = 100
         retainPercentage = 0.2
         randomPercentage = 0.05
         fittestSolution = None
@@ -27,7 +27,7 @@ class GeneticAlgorithm:
 
 
         # Generate population and calculate fitness
-        populationList = populationObj.generate_population(teams, venues, timeslots,times, populationSize)
+        populationList = populationObj.generate_population(teams, venues,date,timeslots, populationSize)
         for individual in populationList:
             fitnessObj.fitness(individual)
 

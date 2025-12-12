@@ -5,10 +5,11 @@ import datetime
 
 class ScheduleIndividual:
     # constructor
-    def __init__(self, teams, venues, timeslots, start_date, randomize=False):
+    def __init__(self, teams, venues,date, timeslots, start_date, randomize=False):
         self.teams = teams[:]
         self.venues = venues[:]
         self.timeslots = timeslots[:]
+        self.date = date[:]
         if isinstance(start_date, str):
             self.start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
         elif isinstance(start_date, datetime.date):

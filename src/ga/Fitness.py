@@ -10,6 +10,7 @@ class Fitness:
         self.constraintsObj.venue_usage = {}
         self.constraintsObj.team_last_match_day = {}
         self.constraintsObj.team_times = {}
+        individual.fitness_score = 10000  # Reset fitness score to a base value
 
         c = self.constraintsObj
         penalty1 = c.TwoMatchesPerTeamatSameDay(individual) # Constraint 1
@@ -21,10 +22,9 @@ class Fitness:
 
         individual.fitness_score -= total_penalty # Subtract penalties from fitness score
 
-        if individual.fitness_score < 0:
-            individual.penalties = {
-                'TwoMatchesPerTeamatSameDay': penalty1,
-                'VenueConfliictConstraint': penalty2,
-                'RestDayConstraint': penalty3,
-                'FairTimeDistributionConstraint': penalty4
-            }
+        individual.penalties = {
+           'TwoMatchesPerTeamatSameDay': penalty1,
+           'VenueConfliictConstraint': penalty2,
+           'RestDayConstraint': penalty3,
+           'FairTimeDistributionConstraint': penalty4
+       }

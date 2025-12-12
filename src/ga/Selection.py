@@ -30,8 +30,8 @@ class Selection:
             new_individual = ScheduleIndividual(
                 winner.teams,
                 winner.venues,
+                winner.date,
                 winner.timeslots,
-                winner.times,
                 winner.start_date,
                 randomize=False
             )
