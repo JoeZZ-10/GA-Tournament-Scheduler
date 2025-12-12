@@ -6,6 +6,11 @@ class Fitness:
         self.constraintsObj = Constraints()
 
     def fitness(self,individual):
+        self.constraintsObj.Team_Played = {}
+        self.constraintsObj.venue_usage = {}
+        self.constraintsObj.team_last_match_day = {}
+        self.constraintsObj.team_times = {}
+
         c = self.constraintsObj
         penalty1 = c.TwoMatchesPerTeamatSameDay(individual) # Constraint 1
         penalty2 = c.VenueConfliictConstraint(individual) # Constraint 2

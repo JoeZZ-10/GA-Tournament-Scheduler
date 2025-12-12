@@ -21,19 +21,28 @@ class Constraints:
             penalty += conflict_found * 500 # High penalty for this constraint
         return penalty
 
-    def count_team_conflicts(self,m):
+    def count_team_conflicts(self, m):
         conflict_found = 0
-        Team_timeslot1 = (m['home'], m['date'], m['timeslot'])
-        Team_timeslot2 = (m['away'], m['date'], m['timeslot'])  
-        if Team_timeslot1 in self.Team_Played: # Check if team has already played at this timeslot for home team
-            conflict_found += 1 
-        else: # if not, mark team as played at this timeslot for home team
-            self.Team_Played[Team_timeslot1] = 1 # Mark team as played at this timeslot for home team
-        if Team_timeslot2 in self.Team_Played: # Check if team has already played at this timeslot for away team
+        time_slot = m['timeslot']
+        # Initialize set for this timeslot if not exist
+        if time_slot not in self.Team_Played:
+            self.Team_Played[time_slot] = set()
+
+        played = self.Team_Played[time_slot]
+        home = m['home']
+        away = m['away']
+
+        if home in played and away in played:
+            conflict_found += 2
+        elif home in played or away in played:
             conflict_found += 1
-        else: # if not, mark team as played at this timeslot for away team
-            self.Team_Played[Team_timeslot2] = 1 # Mark team as played at this timeslot for away team
+        else:
+            # Register teams as played
+            played.add(home)
+            played.add(away)
+
         return conflict_found
+
     
 # -----------------------------------------------------------------------------------------
     
@@ -42,12 +51,18 @@ class Constraints:
     def VenueConfliictConstraint(self,individual):
         penalty = 0
         conflict_found = 0
-        for i,round_matches in enumerate(individual.schedule,start= 1):
+        for round_matches in individual.schedule:
             for m in round_matches:
-                venue_timeslot = (m['round'],m['venue'],m['time'],m['timeslot'])
-                if venue_timeslot in self.venue_usage: # Check if venue is already used at this timeslot
-                    conflict_found += 1
-                self.venue_usage[venue_timeslot] = 1 # Mark venue as used at this timeslot
+                timeandtime_slot_usage = (m['time'],m['timeslot'])
+                venue = m['venue']
+                if venue in self.venue_usage: # Check if venue is already used at this timeslot
+                    if  timeandtime_slot_usage in self.venue_usage[venue]:
+                        conflict_found += 1
+                    else:
+                        self.venue_usage[venue].add(timeandtime_slot_usage) # Mark venue as used at this timeslot
+                else:
+                    self.venue_usage[venue] = set() # Initialize set for venue
+                    self.venue_usage[venue].add(timeandtime_slot_usage) 
         if conflict_found > 0:
             penalty += conflict_found * 200
         return penalty
