@@ -10,21 +10,31 @@ class Fitness:
         self.constraintsObj.venue_usage = {}
         self.constraintsObj.team_last_match_day = {}
         self.constraintsObj.team_times = {}
+        self.TwoMatchesPerTeamatSameDay_Conflict_Found = 0
+        self.Venue_Conflict_Found = 0
+        self.Rest_Violations_Conflict_Found = 0
+        self.Fair_Time_Distribution_Conflict_Found = 0
+        individual.fitness_score = 10000  # Reset fitness score before calculation
 
-        c = self.constraintsObj
-        penalty1 = c.TwoMatchesPerTeamatSameDay(individual) # Constraint 1
-        penalty2 = c.VenueConfliictConstraint(individual) # Constraint 2
-        penalty3 = c.RestDayConstraint(individual) # Constraint 3
-        penalty4 = c.FairTimeDistributionConstraint(individual) # Constraint 4
+        for round_matches in individual.schedule:
+            for m in round_matches:
+                self.TwoMatchesPerTeamatSameDay_Conflict_Found += self.constraintsObj.TwoMatchesPerTeamatSameDay(m) # Constraint 1
+                self.Venue_Conflict_Found += self.constraintsObj.VenueConfliictConstraint(m) # Constraint 2
+                self.Rest_Violations_Conflict_Found += self.constraintsObj.RestDayConstraint(m) # Constraint 3
+                self.Fair_Time_Distribution_Conflict_Found += self.constraintsObj.FairTimeDistributionConstraint(m) # Constraint 4
 
-        total_penalty = penalty1 + penalty2 + penalty3 + penalty4  # Sum of all penalties
+        TwoMatchesPerTeamatSameDay_penalty = self.TwoMatchesPerTeamatSameDay_Conflict_Found * 500
+        VenueConfliictConstraint_penalty = self.Venue_Conflict_Found * 200
+        RestDayConstraint_penalty = self.Rest_Violations_Conflict_Found * 100
+        FairTimeDistributionConstraint_penalty = self.Fair_Time_Distribution_Conflict_Found * 50
+
+        total_penalty = TwoMatchesPerTeamatSameDay_penalty + VenueConfliictConstraint_penalty
+        + RestDayConstraint_penalty + FairTimeDistributionConstraint_penalty  # Sum of all penalties
 
         individual.fitness_score -= total_penalty # Subtract penalties from fitness score
-
-        if individual.fitness_score < 0:
-            individual.penalties = {
-                'TwoMatchesPerTeamatSameDay': penalty1,
-                'VenueConfliictConstraint': penalty2,
-                'RestDayConstraint': penalty3,
-                'FairTimeDistributionConstraint': penalty4
-            }
+        individual.penalties = {
+            'TwoMatchesPerTeamatSameDay': TwoMatchesPerTeamatSameDay_penalty,
+            'VenueConfliictConstraint': VenueConfliictConstraint_penalty,
+            'RestDayConstraint':   RestDayConstraint_penalty,
+            'FairTimeDistributionConstraint': FairTimeDistributionConstraint_penalty
+        }

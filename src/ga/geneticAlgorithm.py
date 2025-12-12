@@ -18,7 +18,7 @@ class GeneticAlgorithm:
         mutationObj = Mutation(teams, venues, timeslots, times)
         populationSize = 30
         generationNum = 0
-        maximumGenerations = 500
+        maximumGenerations = 1000
         retainPercentage = 0.2
         randomPercentage = 0.05
         fittestSolution = None

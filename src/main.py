@@ -10,8 +10,11 @@ def run_prediction(mutatetype, slctype, crovertype):
     times = loadDataObj.load_times_from_csv()
     gaObj = GeneticAlgorithm()
     best_schedule = gaObj.runAlgorithm(teams, venues, timeslots,times, crovertype, slctype, mutatetype)
-    if best_schedule.NoSolution:
+    if best_schedule.Nosolution:
         print("No feasible solution found.")
     else:
         best_schedule.display()
         print(best_schedule.fitness_score)
+        
+    for p in best_schedule.penalties:
+            print(F"Constraint: {p}, Penalty: {best_schedule.penalties[p]}")
