@@ -1,5 +1,5 @@
 from ga.Constrains import Constraints
-from ga.individual import ScheduleIndividual
+from ga.individualV2 import ScheduleIndividualV2
 
 class Fitness:
     def __init__(self):
@@ -10,10 +10,12 @@ class Fitness:
         self.constraintsObj.venue_usage = {}
         self.constraintsObj.team_last_match_day = {}
         self.constraintsObj.team_times = {}
+        self.round_last_date = {}
         self.TwoMatchesPerTeamatSameDay_Conflict_Found = 0
         self.Venue_Conflict_Found = 0
         self.Rest_Violations_Conflict_Found = 0
         self.Fair_Time_Distribution_Conflict_Found = 0
+        self.DatesOfRoundNotSorted_Conflict_Found = 0
         individual.fitness_score = 10000  # Reset fitness score before calculation
 
         for round_matches in individual.schedule:
@@ -28,13 +30,12 @@ class Fitness:
         RestDayConstraint_penalty = self.Rest_Violations_Conflict_Found * 100
         FairTimeDistributionConstraint_penalty = self.Fair_Time_Distribution_Conflict_Found * 50
 
-        total_penalty = TwoMatchesPerTeamatSameDay_penalty + VenueConfliictConstraint_penalty
-        + RestDayConstraint_penalty + FairTimeDistributionConstraint_penalty  # Sum of all penalties
+        total_penalty = TwoMatchesPerTeamatSameDay_penalty + VenueConfliictConstraint_penalty + RestDayConstraint_penalty + FairTimeDistributionConstraint_penalty  # Sum of all penalties
 
         individual.fitness_score -= total_penalty # Subtract penalties from fitness score
         individual.penalties = {
             'TwoMatchesPerTeamatSameDay': TwoMatchesPerTeamatSameDay_penalty,
             'VenueConfliictConstraint': VenueConfliictConstraint_penalty,
             'RestDayConstraint':   RestDayConstraint_penalty,
-            'FairTimeDistributionConstraint': FairTimeDistributionConstraint_penalty
+            'FairTimeDistributionConstraint': FairTimeDistributionConstraint_penalty,
         }

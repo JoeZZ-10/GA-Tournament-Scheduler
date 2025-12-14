@@ -1,4 +1,4 @@
-from ga.individual import ScheduleIndividual
+from ga.individualV2 import ScheduleIndividualV2
 
 class Population:
 
@@ -7,7 +7,7 @@ class Population:
 
     def generate_population(self, teams, venues, timeslots,times,population_size):
         for _ in range(population_size):
-            individual = ScheduleIndividual(teams, venues, timeslots,times,"2025-12-01",randomize=True)
+            individual = ScheduleIndividualV2(teams, venues, timeslots,times,"2025-12-01",randomize=True)
             self.population.append(individual)
         return self.population
     

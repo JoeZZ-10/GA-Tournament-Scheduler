@@ -1,4 +1,4 @@
-from ga.individual import ScheduleIndividual
+from ga.individualV2 import ScheduleIndividualV2
 
 class terminationConditions:
 

@@ -7,7 +7,7 @@ class Constraints:
         self.venue_usage = {} # Dictionary to track venue and their timeslots
         self.team_last_match_day = {} # Dictionary to track last match day of each team
         self.team_times = {} # Dictionary to track time slots for each team
-
+        self.round_last_date = {} # Dictionary to track last date of each round
 
     # Constraint 1: No team should have more than one match at the same time slot
 
@@ -43,7 +43,6 @@ class Constraints:
     # Constraint 2: No venue should host more than one match at the same time slot
 
     def VenueConfliictConstraint(self,m):
-        penalty = 0
         conflict_found = 0
         timeandtime_slot_usage = (m['time'],m['timeslot'])
         venue = m['venue']
@@ -106,7 +105,6 @@ class Constraints:
         else:
             self.team_times[m['away']] = m['time'] # Mark away team as played at this time
         return time_distribution_violations
-
 
 
 

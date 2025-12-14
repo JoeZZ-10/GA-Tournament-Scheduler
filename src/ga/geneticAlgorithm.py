@@ -20,7 +20,7 @@ class GeneticAlgorithm:
         generationNum = 0
         maximumGenerations = 1000
         retainPercentage = 0.2
-        randomPercentage = 0.05
+        randomPercentage = 0.2
         fittestSolution = None
         best_fitness_per_gen = []
         avg_fitness_per_gen = []
@@ -79,8 +79,6 @@ class GeneticAlgorithm:
             if fittestSolution.fitness_score == 10000:
                 break
             
-        if fittestSolution.fitness_score < 0:
-            individual.Nosolution = True # to handle the no solutins in the GUI, for mohamed
         # bes and avrage fitness for the plots
         fitness_values = [ind.fitness_score for ind in populationList]
 

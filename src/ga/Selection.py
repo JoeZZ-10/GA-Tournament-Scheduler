@@ -1,6 +1,6 @@
 import random
 import copy
-from ga.individual import ScheduleIndividual
+from ga.individualV2 import ScheduleIndividualV2
 
 class Selection:     
 
@@ -27,15 +27,6 @@ class Selection:
             else:
                 winner = self.tournament_selection(population)
             
-            new_individual = ScheduleIndividual(
-                winner.teams,
-                winner.venues,
-                winner.timeslots,
-                winner.times,
-                winner.start_date,
-                randomize=False
-            )
-            new_individual.schedule = copy.deepcopy(winner.schedule)
-            new_individual.fitness_score = winner.fitness_score
+            new_individual = copy.deepcopy(winner)
             selected.append(new_individual)
         return selected
