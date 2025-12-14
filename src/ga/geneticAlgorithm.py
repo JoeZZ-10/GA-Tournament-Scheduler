@@ -1,3 +1,93 @@
+# from ga.population import Population
+# from ga.Fitness import Fitness
+# from ga.Selection import Selection
+# from ga.crossover import Crossover
+# from ga.mutation import Mutation
+# from ga.Termination import terminationConditions
+# import random
+
+
+
+# class GeneticAlgorithm:
+
+#     def runAlgorithm (self,teams, venues, timeslots,times, CrossOverType, SlectionType, MutationType):
+#         populationObj = Population()
+#         selectionObj = Selection()
+#         fitnessObj = Fitness()
+#         CrossoverObj = Crossover()
+#         mutationObj = Mutation(teams, venues, timeslots, times)
+#         populationSize = 30
+#         generationNum = 0
+#         maximumGenerations = 1000
+#         retainPercentage = 0.2
+#         randomPercentage = 0.2
+#         fittestSolution = None
+#         best_fitness_per_gen = []
+#         avg_fitness_per_gen = []
+
+
+#         # Generate population and calculate fitness
+#         populationList = populationObj.generate_population(teams, venues, timeslots,times, populationSize)
+#         for individual in populationList:
+#             fitnessObj.fitness(individual)
+
+#         while generationNum != maximumGenerations:
+
+#             # Selection on the whole population
+#             selectedIndividuals = selectionObj.select_population(populationList, populationSize, SlectionType)
+#             sortedPopulation = sorted(selectedIndividuals,key=lambda ind: ind.fitness_score,reverse=True)
+
+#             # keeps a percentage of the top individuals in the new generation
+#             newGeneration = []
+#             retainedIndividuals = int(len(populationList) * retainPercentage)
+#             newGeneration = sortedPopulation [:retainedIndividuals]
+
+#             # Adds a few individuals other from the top ones for diversity
+#             for individual in sortedPopulation[retainedIndividuals:]:
+#                 if randomPercentage > random.random():
+#                     newGeneration.append(individual)
+
+#             # Chooses random parents for crossover
+#             while len(newGeneration) < populationSize:
+#                 index1 = random.randint(0,len(newGeneration)-1)
+#                 index2 = random.randint(0,len(newGeneration)-1)
+#                 if index1 == index2:
+#                     continue
+#                 else:
+#                     parent1 = newGeneration[index1]
+#                     parent2 = newGeneration[index2]
+#                     child1,child2 = CrossoverObj.crossover(CrossOverType,parent1,parent2)
+#                     newGeneration.append(child1)
+
+#                     if len(newGeneration) < populationSize:
+#                         newGeneration.append(child2)
+
+#             # Mutate some individuals
+#             for individual in newGeneration:
+#                 mutationObj.mutate(individual, MutationType)
+
+#             # calculate fitness for new generation
+#             for individual in newGeneration:
+#                 fitnessObj.fitness(individual)
+
+#             populationList = newGeneration
+
+#             generationNum += 1
+
+#             # keeps track of the best solution across all generations
+#             fittestSolution = terminationConditions.checkForSolution(terminationConditions,newGeneration)
+#             if fittestSolution.fitness_score == 10000:
+#                 break
+            
+#         # bes and avrage fitness for the plots
+#         fitness_values = [ind.fitness_score for ind in populationList]
+
+#         best_fitness_per_gen.append(max(fitness_values))
+#         avg_fitness_per_gen.append(sum(fitness_values) / len(fitness_values))
+
+#         return fittestSolution
+
+
 from ga.population import Population
 from ga.Fitness import Fitness
 from ga.Selection import Selection
@@ -10,7 +100,7 @@ import random
 
 class GeneticAlgorithm:
 
-    def runAlgorithm (self,teams, venues, timeslots,times, CrossOverType, SlectionType, MutationType):
+    def runAlgorithm(self, teams, venues, timeslots, times, CrossOverType, SlectionType, MutationType):
         populationObj = Population()
         selectionObj = Selection()
         fitnessObj = Fitness()
@@ -27,20 +117,25 @@ class GeneticAlgorithm:
 
 
         # Generate population and calculate fitness
-        populationList = populationObj.generate_population(teams, venues, timeslots,times, populationSize)
+        populationList = populationObj.generate_population(teams, venues, timeslots, times, populationSize)
         for individual in populationList:
             fitnessObj.fitness(individual)
+        
+        # Track initial generation fitness
+        fitness_values = [ind.fitness_score for ind in populationList]
+        best_fitness_per_gen.append(max(fitness_values))
+        avg_fitness_per_gen.append(sum(fitness_values) / len(fitness_values))
 
-        while generationNum != maximumGenerations:
+        while generationNum < maximumGenerations:
 
             # Selection on the whole population
             selectedIndividuals = selectionObj.select_population(populationList, populationSize, SlectionType)
-            sortedPopulation = sorted(selectedIndividuals,key=lambda ind: ind.fitness_score,reverse=True)
+            sortedPopulation = sorted(selectedIndividuals, key=lambda ind: ind.fitness_score, reverse=True)
 
             # keeps a percentage of the top individuals in the new generation
             newGeneration = []
             retainedIndividuals = int(len(populationList) * retainPercentage)
-            newGeneration = sortedPopulation [:retainedIndividuals]
+            newGeneration = sortedPopulation[:retainedIndividuals]
 
             # Adds a few individuals other from the top ones for diversity
             for individual in sortedPopulation[retainedIndividuals:]:
@@ -49,14 +144,14 @@ class GeneticAlgorithm:
 
             # Chooses random parents for crossover
             while len(newGeneration) < populationSize:
-                index1 = random.randint(0,len(newGeneration)-1)
-                index2 = random.randint(0,len(newGeneration)-1)
+                index1 = random.randint(0, len(newGeneration)-1)
+                index2 = random.randint(0, len(newGeneration)-1)
                 if index1 == index2:
                     continue
                 else:
                     parent1 = newGeneration[index1]
                     parent2 = newGeneration[index2]
-                    child1,child2 = CrossoverObj.crossover(CrossOverType,parent1,parent2)
+                    child1, child2 = CrossoverObj.crossover(CrossOverType, parent1, parent2)
                     newGeneration.append(child1)
 
                     if len(newGeneration) < populationSize:
@@ -74,15 +169,20 @@ class GeneticAlgorithm:
 
             generationNum += 1
 
+            # Track fitness for this generation
+            fitness_values = [ind.fitness_score for ind in populationList]
+            best_fitness_per_gen.append(max(fitness_values))
+            avg_fitness_per_gen.append(sum(fitness_values) / len(fitness_values))
+
             # keeps track of the best solution across all generations
-            fittestSolution = terminationConditions.checkForSolution(terminationConditions,newGeneration)
-            if fittestSolution.fitness_score == 10000:
-                break
+            fittestSolution = terminationConditions.checkForSolution(terminationConditions, newGeneration)
             
-        # bes and avrage fitness for the plots
-        fitness_values = [ind.fitness_score for ind in populationList]
+            # Print progress every 100 generations
+            if generationNum % 100 == 0:
+                print(f"Generation {generationNum}: Best Fitness = {fittestSolution.fitness_score}")
+            
+            if fittestSolution.fitness_score == 10000:
+                print(f"Perfect solution found at generation {generationNum}!")
+                break
 
-        best_fitness_per_gen.append(max(fitness_values))
-        avg_fitness_per_gen.append(sum(fitness_values) / len(fitness_values))
-
-        return fittestSolution
+        return fittestSolution, best_fitness_per_gen, avg_fitness_per_gen
