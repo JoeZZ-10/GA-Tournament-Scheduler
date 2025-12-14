@@ -28,7 +28,9 @@ class GeneticAlgorithm:
 
         # Generate population and calculate fitness
         populationList = populationObj.generate_population(teams, venues,date,timeslots, populationSize)
+
         for individual in populationList:
+            # individual.display()    
             fitnessObj.fitness(individual)
 
         while generationNum != maximumGenerations:

@@ -64,6 +64,7 @@ class ScheduleIndividual:
 
             for i, (home, away) in enumerate(matches_copy):
                 random_day_offset = random.randint(0,6) # pick random day within the week
+                
                 date = base_week + datetime.timedelta(days=random_day_offset) # compute match date
                 venue = round_venues[i] # assign venue for the match
                 timeslot = random.choice(self.timeslots) # randomly assign timeslot
@@ -90,3 +91,4 @@ class ScheduleIndividual:
             for m in round_matches:
                 print(f"{m['home']} vs {m['away']} @ {m['venue']} on {m['timeslot']} {m['date']}")
             print()
+

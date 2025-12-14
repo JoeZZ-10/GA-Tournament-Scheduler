@@ -13,10 +13,10 @@ class Fitness:
         individual.fitness_score = 10000  # Reset fitness score to a base value
 
         c = self.constraintsObj
-        penalty1 = c.TwoMatchesPerTeamatSameDay(individual) # Constraint 1
-        penalty2 = c.VenueConfliictConstraint(individual) # Constraint 2
-        penalty3 = c.RestDayConstraint(individual) # Constraint 3
-        penalty4 = c.FairTimeDistributionConstraint(individual) # Constraint 4
+        penalty1 = c.TwoMatchesPerTeamatSameDay(individual) 
+        penalty2 = c.VenueConfliictConstraint(individual) 
+        penalty3 = c.RestDayConstraint(individual) 
+        penalty4 = c.FairTimeDistributionConstraint(individual)
 
         total_penalty = penalty1 + penalty2 + penalty3 + penalty4  # Sum of all penalties
 

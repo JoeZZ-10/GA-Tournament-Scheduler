@@ -126,6 +126,3 @@ class Constraints:
             self.team_times[m['away']] = m['timeslot'] # Mark away team as played at this time
         return time_distribution_violations
 
-
-
-

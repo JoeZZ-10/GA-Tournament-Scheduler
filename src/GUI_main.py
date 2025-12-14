@@ -65,7 +65,8 @@ txt_timeslot = Text(frame_texts, width=txt_width, height=txt_height)
 txt_times = Text(frame_texts, width=txt_width, height=txt_height)
 
 txt_teams.pack(side=LEFT, padx=15)
-txt_venue.pack(side=LEFT, padx=15)
+txt_venue.pack(side=LEFT, padx=15)  
+
 txt_timeslot.pack(side=LEFT, padx=15)
 txt_times.pack(side=LEFT, padx=15)
 
