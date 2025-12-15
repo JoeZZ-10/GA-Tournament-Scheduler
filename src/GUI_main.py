@@ -2,6 +2,8 @@ from tkinter import *
 from main import run_prediction
 from tkinter import filedialog, messagebox
 import pandas as pd
+import threading
+from ga.individualV2 import ScheduleIndividualV2
 
 window_GA = Tk()
 window_GA.title("Genetic Algorithms For The Sport Tournament Schedule")
@@ -65,8 +67,7 @@ txt_timeslot = Text(frame_texts, width=txt_width, height=txt_height)
 txt_times = Text(frame_texts, width=txt_width, height=txt_height)
 
 txt_teams.pack(side=LEFT, padx=15)
-txt_venue.pack(side=LEFT, padx=15)  
-
+txt_venue.pack(side=LEFT, padx=15)
 txt_timeslot.pack(side=LEFT, padx=15)
 txt_times.pack(side=LEFT, padx=15)
 
@@ -104,16 +105,20 @@ def save_csv(txt_area, file_path):
 
 Button(frame_buttons, text="Upload Teams", width=20, command=lambda: load_csv(txt_teams, "teams")).pack(side=LEFT, padx=15)
 Button(frame_buttons, text="Upload Venue", width=20, command=lambda: load_csv(txt_venue, "venue")).pack(side=LEFT, padx=15)
-Button(frame_buttons, text="Upload TimeSlot", width=20, command=lambda: load_csv(txt_timeslot, "timeslot")).pack(side=LEFT, padx=15)
+Button(frame_buttons, text="Upload Dates", width=20, command=lambda: load_csv(txt_timeslot, "timeslot")).pack(side=LEFT, padx=15)
 Button(frame_buttons, text="Upload Times", width=20, command=lambda: load_csv(txt_times, "times")).pack(side=LEFT, padx=15)
 
 Button(frame_save, text="Save Teams", width=20, command=lambda: save_csv(txt_teams, teams_path)).pack(side=LEFT, padx=15)
 Button(frame_save, text="Save Venue", width=20, command=lambda: save_csv(txt_venue, venue_path)).pack(side=LEFT, padx=15)
-Button(frame_save, text="Save TimeSlot", width=20, command=lambda: save_csv(txt_timeslot, timeslot_path)).pack(side=LEFT, padx=15)
+Button(frame_save, text="Save Dates", width=20, command=lambda: save_csv(txt_timeslot, timeslot_path)).pack(side=LEFT, padx=15)
 Button(frame_save, text="Save Times", width=20, command=lambda: save_csv(txt_times, times_path)).pack(side=LEFT, padx=15)
 
 frame_run = Frame(window_GA)
 frame_run.pack(pady=20)
+
+# Status label for showing progress
+status_label = Label(frame_run, text="", font=("Arial", 12), justify="center", fg="blue")
+status_label.pack(side=TOP, pady=5)
 
 msg2 = Label(frame_run, text="whenever you are ready ;)", font=("Arial", 18, "bold"), justify="center")
 msg2.pack(side=LEFT, padx=20)
@@ -122,9 +127,54 @@ def prediction():
     mutatetype = mutation_type.get()
     slctype = selection_type.get()
     crovertype = crossover_type.get()
-    run_prediction(mutatetype=mutatetype, slctype=slctype, crovertype=crovertype)
+    
+    # Update status
+    status_label.config(text="Running Genetic Algorithm... Please wait.", fg="blue")
+    predict_btn.config(state=DISABLED)
+    window_GA.update()
+    
+    # Run prediction in a separate thread to keep GUI responsive
+    def run_thread():
+        total_penalties = 0
+        try:
+            run_prediction(
+                mutatetype=mutatetype,
+                slctype=slctype,
+                crovertype=crovertype
+            )
+            status_label.config(
+                text="Prediction completed successfully! Check the results window.",
+                fg="green"
+            )
+
+        except ValueError as e:
+            total_penalties = e.args[0]
+            status_label.config(text="No Solution found!", fg="blue")
+            messagebox.showerror(
+                "No Solutions",
+                f"No Valid Solutions occurred.\n"
+                f"Number of Penalties: {total_penalties}"
+            )
+
+        except Exception as e:
+            status_label.config(text="Error occurred!", fg="red")
+            messagebox.showerror("Unexpected Error", str(e))
+
+        finally:
+            predict_btn.config(state=NORMAL)
+
+    try:
+        thread = threading.Thread(target=run_thread)
+        thread.daemon = True
+        thread.start()
+        
+    except Exception as e:
+        status_label.config(text="Error occurred!", fg="red")
+        predict_btn.config(state=NORMAL)
 
 predict_btn = Button(frame_run, text="Predict", font=("Arial", 14, "bold"), width=12, bg="#4CAF50", fg="white", command=prediction)
 predict_btn.pack(side=LEFT, padx=20)
+
+
 
 window_GA.mainloop()
