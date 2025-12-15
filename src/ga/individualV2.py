@@ -8,31 +8,12 @@ class ScheduleIndividualV2:
     for venues, dates, and timeslots to ensure initial constraint violations.
     """
     
-    def __init__(self, teams, venues, timeslots,times, start_date, randomize=False):
-        """
-        Initialize a schedule individual.
-        
-        Args:
-            teams: List of team names
-            venues: List of available venues
-            date: List of available dates (as strings)
-            timeslots: List of available time slots (as datetime.time objects)
-            start_date: Start date for the tournament (string or datetime.date)
-            randomize: If True, uses completely random assignment for all attributes
-        """
+    def __init__(self, teams, venues, timeslots, times, randomize=False):
+        # Initialize a schedule individual.
         self.teams = teams[:]
         self.venues = venues[:]
         self.timeslots = timeslots[:]
         self.times = times[:]
-        
-        # Parse start_date
-        if isinstance(start_date, str):
-            self.start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-        elif isinstance(start_date, datetime.date):
-            self.start_date = start_date
-        else:
-            raise TypeError("start_date must be a 'YYYY-MM-DD' string or a datetime.date object")
-        
         self.randomize = randomize
         
         # Generate the schedule

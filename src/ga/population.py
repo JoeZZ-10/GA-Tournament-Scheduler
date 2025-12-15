@@ -7,7 +7,7 @@ class Population:
 
     def generate_population(self, teams, venues, timeslots,times,population_size):
         for _ in range(population_size):
-            individual = ScheduleIndividualV2(teams, venues, timeslots,times,"2025-12-01",randomize=True)
+            individual = ScheduleIndividualV2(teams, venues, timeslots,times,randomize=True)
             self.population.append(individual)
         return self.population
     
