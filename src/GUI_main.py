@@ -3,6 +3,7 @@ from main import run_prediction
 from tkinter import filedialog, messagebox
 import pandas as pd
 import threading
+from ga.individualV2 import ScheduleIndividualV2
 
 window_GA = Tk()
 window_GA.title("Genetic Algorithms For The Sport Tournament Schedule")
@@ -132,28 +133,48 @@ def prediction():
     predict_btn.config(state=DISABLED)
     window_GA.update()
     
+    # Run prediction in a separate thread to keep GUI responsive
+    def run_thread():
+        total_penalties = 0
+        try:
+            run_prediction(
+                mutatetype=mutatetype,
+                slctype=slctype,
+                crovertype=crovertype
+            )
+            status_label.config(
+                text="Prediction completed successfully! Check the results window.",
+                fg="green"
+            )
+
+        except ValueError as e:
+            total_penalties = e.args[0]
+            status_label.config(text="No Solution found!", fg="blue")
+            messagebox.showerror(
+                "Error",
+                f"No Valid Solutions occurred.\n"
+                f"Number of Penalties: {total_penalties}"
+            )
+
+        except Exception as e:
+            status_label.config(text="Error occurred!", fg="red")
+            messagebox.showerror("Unexpected Error", str(e))
+
+        finally:
+            predict_btn.config(state=NORMAL)
+
     try:
-        # Run prediction in a separate thread to keep GUI responsive
-        def run_thread():
-            try:
-                run_prediction(mutatetype=mutatetype, slctype=slctype, crovertype=crovertype)
-                status_label.config(text="Prediction completed successfully! Check the results window.", fg="green")
-            except Exception as e:
-                status_label.config(text=f"Error: {str(e)}", fg="red")
-                messagebox.showerror("Error", f"An error occurred:\n{str(e)}")
-            finally:
-                predict_btn.config(state=NORMAL)
-        
         thread = threading.Thread(target=run_thread)
         thread.daemon = True
         thread.start()
         
     except Exception as e:
         status_label.config(text="Error occurred!", fg="red")
-        messagebox.showerror("Error", f"An error occurred:\n{str(e)}")
         predict_btn.config(state=NORMAL)
 
 predict_btn = Button(frame_run, text="Predict", font=("Arial", 14, "bold"), width=12, bg="#4CAF50", fg="white", command=prediction)
 predict_btn.pack(side=LEFT, padx=20)
+
+
 
 window_GA.mainloop()

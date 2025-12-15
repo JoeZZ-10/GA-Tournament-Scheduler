@@ -1,7 +1,6 @@
 from Create_Plots import PlotManager
 
 def run_prediction(mutatetype, slctype, crovertype):
-    from ga.population import Population 
     from data.loadData import LoadData
     from ga.geneticAlgorithm import GeneticAlgorithm
     from ScheduleViewer import ScheduleViewer
@@ -11,7 +10,6 @@ def run_prediction(mutatetype, slctype, crovertype):
     venues = loadDataObj.load_venues()
     timeslots = loadDataObj.load_timeslots()
     times = loadDataObj.load_times_from_csv()
-    
     gaObj = GeneticAlgorithm()
     print(f"\nRunning GA with:")
     print(f"  Crossover: {crovertype}")
@@ -25,10 +23,12 @@ def run_prediction(mutatetype, slctype, crovertype):
     )
     
     print(f"\nFinal Best Fitness: {best_schedule.fitness_score}")
-    
     if best_schedule.fitness_score < 0:
+        total_penelties = sum(best_schedule.penalties.values())
         print("No feasible solution found.")
-        print(f"Fitness Score: {best_schedule.fitness_score}")
+        print(f"Penalty Score: {total_penelties}")  
+        raise ValueError(total_penelties)  
+    
     else:
         # Display schedule in console
         best_schedule.display()
