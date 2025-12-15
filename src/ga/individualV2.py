@@ -5,14 +5,14 @@ class ScheduleIndividualV2:
     """
     Represents a tournament schedule individual for genetic algorithm.
     Uses Round Robin for pairing teams and completely random assignment 
-    for venues, dates, and timeslots to ensure initial constraint violations.
+    for venues, dates, and times to ensure initial constraint violations.
     """
     
-    def __init__(self, teams, venues, timeslots, times, randomize=False):
+    def __init__(self, teams, venues, dates, times, randomize=False):
         # Initialize a schedule individual.
         self.teams = teams[:]
         self.venues = venues[:]
-        self.timeslots = timeslots[:]
+        self.dates = dates[:]
         self.times = times[:]
         self.randomize = randomize
         
@@ -26,13 +26,7 @@ class ScheduleIndividualV2:
         self.Nosolution = False  # Flag to indicate if no valid solution found
     
     def generate_pair_rounds(self):
-        """
-        Generate team pairings using Round Robin algorithm.
-        Each team plays every other team exactly once.
-        
-        Returns:
-            List of rounds, where each round contains match tuples (home, away)
-        """
+        # Generate team pairings using Round Robin algorithm
         teams = self.teams[:]
         
         # Handle odd number of teams by adding a "BYE"
@@ -63,16 +57,7 @@ class ScheduleIndividualV2:
         return rounds
     
     def assign_slots_randomly(self, pair_rounds):
-        """
-        Assign venues, dates, and timeslots completely randomly to matches.
-        This ensures constraint violations in initial population for GA to optimize.
-        
-        Args:
-            pair_rounds: List of rounds with team pairings
-            
-        Returns:
-            Complete schedule with all match details
-        """
+        # Assign venues, dates, and times completely randomly to matches.
         rounds_with_slots = []
         
         for round_index, matches in enumerate(pair_rounds):
@@ -82,7 +67,7 @@ class ScheduleIndividualV2:
                 # Completely random assignment of all attributes
                 venue = random.choice(self.venues)
                 time = random.choice(self.times)
-                timeslot = random.choice(self.timeslots)
+                date = random.choice(self.dates)
                 
                 # Optionally swap home/away randomly for more variation
                 if self.randomize and random.random() < 0.3:
@@ -94,7 +79,7 @@ class ScheduleIndividualV2:
                     "home": home,
                     "away": away,
                     "venue": venue,
-                    "timeslot": timeslot,
+                    "timeslot": date,
                     "time": time
                 }
                 
@@ -109,10 +94,7 @@ class ScheduleIndividualV2:
         return rounds_with_slots
     
     def display(self):
-        """
-        Display the complete schedule in a readable format.
-        Shows round number, teams, venue, time, and date for each match.
-        """
+        # Display the complete schedule
         print(f"\n{'='*70}")
         print(f"TOURNAMENT SCHEDULE (Fitness: {self.fitness_score})")
         print(f"{'='*70}\n")
