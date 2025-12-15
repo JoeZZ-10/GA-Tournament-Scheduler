@@ -105,12 +105,12 @@ def save_csv(txt_area, file_path):
 
 Button(frame_buttons, text="Upload Teams", width=20, command=lambda: load_csv(txt_teams, "teams")).pack(side=LEFT, padx=15)
 Button(frame_buttons, text="Upload Venue", width=20, command=lambda: load_csv(txt_venue, "venue")).pack(side=LEFT, padx=15)
-Button(frame_buttons, text="Upload TimeSlot", width=20, command=lambda: load_csv(txt_timeslot, "timeslot")).pack(side=LEFT, padx=15)
+Button(frame_buttons, text="Upload Dates", width=20, command=lambda: load_csv(txt_timeslot, "timeslot")).pack(side=LEFT, padx=15)
 Button(frame_buttons, text="Upload Times", width=20, command=lambda: load_csv(txt_times, "times")).pack(side=LEFT, padx=15)
 
 Button(frame_save, text="Save Teams", width=20, command=lambda: save_csv(txt_teams, teams_path)).pack(side=LEFT, padx=15)
 Button(frame_save, text="Save Venue", width=20, command=lambda: save_csv(txt_venue, venue_path)).pack(side=LEFT, padx=15)
-Button(frame_save, text="Save TimeSlot", width=20, command=lambda: save_csv(txt_timeslot, timeslot_path)).pack(side=LEFT, padx=15)
+Button(frame_save, text="Save Dates", width=20, command=lambda: save_csv(txt_timeslot, timeslot_path)).pack(side=LEFT, padx=15)
 Button(frame_save, text="Save Times", width=20, command=lambda: save_csv(txt_times, times_path)).pack(side=LEFT, padx=15)
 
 frame_run = Frame(window_GA)
@@ -151,7 +151,7 @@ def prediction():
             total_penalties = e.args[0]
             status_label.config(text="No Solution found!", fg="blue")
             messagebox.showerror(
-                "Error",
+                "No Solutions",
                 f"No Valid Solutions occurred.\n"
                 f"Number of Penalties: {total_penalties}"
             )
