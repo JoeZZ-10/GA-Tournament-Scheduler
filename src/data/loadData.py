@@ -4,10 +4,10 @@ import datetime
 
 class LoadData:
     def __init__(self):
-        self.Teams = "GA-Tournament-Scheduler/src/data/Teams.csv"
-        self.Venues = "GA-Tournament-Scheduler/src/data/Venues.csv"
-        self.TimeSlots = "GA-Tournament-Scheduler/src/data/TimeSlots.csv"
-        self.Times = "GA-Tournament-Scheduler/src/data/Times.csv"
+        self.Teams = "src/data/Teams.csv"
+        self.Venues = "src/data/Venues.csv"
+        self.TimeSlots = "src/data/TimeSlots.csv"
+        self.Times = "src/data/Times.csv"
 
     def load_teams(self):
         dataset = pd.read_csv(self.Teams)
